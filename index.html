@@ -432,26 +432,86 @@ const SC=[
     tl.to('#albl',{opacity:1,duration:.8},'+=0.1').add(()=>{const c=ctr($('#albl'));fx.burst(c.x,c.y,40,{speed:300});$('#h3').textContent='Mọi kỷ niệm đã được cất vào album ♡';unlock()})}
 }},
 
-/* ---- 5. GÓC NHẠC NHỎ ---- */
+/* ---- 5. HỘP THƯ GỬI CÔ ---- */
 {dark:true,enter(el){
-  el.innerHTML=`<div class="kicker">Góc nhạc nhỏ</div>
-  <div class="player glass"><div class="vinyl"><div class="disc"><div class="label">8C5</div></div><div class="arm"></div></div>
-  <div><div class="sname">${SONG_NAME}</div><div class="sby">${SONG_NOTE}</div></div>
-  <div class="bars" id="bars">${'<i></i>'.repeat(28)}</div>
-  <div class="prog"><span id="tcur">0:00</span><input type="range" id="seek" min="0" max="1000" value="0"><span id="tdur">0:00</span></div>
-  <div class="ctrls"><button class="pbtn" id="pbtn">▶</button><div class="vol">🔈<input type="range" id="vol" min="0" max="100" value="${bgm.volume*100}"></div></div></div>
-  <p class="hint">Có những lời chưa nói thành tiếng — hãy để giai điệu nói thay tụi em.</p>`;
-  gsap.from('.player',{y:50,autoAlpha:0,duration:1.1,ease:'power3.out',delay:.3});
-  const f=s=>isFinite(s)?Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0'):'0:00',seek=$('#seek'),pb=$('#pbtn');
-  const upd=()=>{if(!seek.isConnected)return;pb.textContent=bgm.paused?'▶':'❚❚';$('#tcur').textContent=f(bgm.currentTime);$('#tdur').textContent=f(bgm.duration);
-    if(bgm.duration&&document.activeElement!==seek)seek.value=bgm.currentTime/bgm.duration*1000};
-  bgm.ontimeupdate=upd;bgm.onplay=()=>{sync();upd()};bgm.onpause=()=>{sync();upd()};bgm.onloadedmetadata=upd;upd();
-  pb.onclick=()=>bgm.paused?playMusic():bgm.pause();
-  seek.oninput=()=>{if(bgm.duration)bgm.currentTime=seek.value/1000*bgm.duration};
-  $('#vol').oninput=e=>{bgm.volume=e.target.value/100};
-  const bars=$$('#bars i');const loop=t=>{if(!bars[0].isConnected)return;const pl=!bgm.paused;
-    bars.forEach((b,i)=>{const v=pl?.18+.82*Math.abs(Math.sin(t/260+i*.55)*Math.sin(t/410+i*.31)):.1;b.style.transform=`scaleY(${v.toFixed(3)})`});requestAnimationFrame(loop)};loop(0);
-  gsap.delayedCall(2.5,()=>unlock());
+  if(!$('#mbstyle')){const st=document.createElement('style');st.id='mbstyle';st.textContent=`
+  .mbg{display:grid;grid-template-columns:repeat(3,min(28vw,118px));gap:16px min(3vw,16px);justify-content:center;margin:4px 0 6px}
+  .mbw{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer}
+  .mbx{position:relative;width:100%;aspect-ratio:3/2;border-radius:6px;background:linear-gradient(#f3dfd2,#ecd2c3);box-shadow:0 10px 22px rgba(0,0,0,.35);transition:transform .3s,opacity .5s}
+  .mbx::before{content:'';position:absolute;inset:0;border-radius:6px;background:linear-gradient(#e6cdbf,#f6e6da);clip-path:polygon(0 0,100% 0,50% 58%)}
+  .mbx::after{content:'';position:absolute;inset:0;border-radius:6px;background:linear-gradient(180deg,#f8ece2,#efd9cb);clip-path:polygon(0 100%,0 0,50% 56%,100% 0,100% 100%);z-index:-0;opacity:.0}
+  .mbw:hover .mbx{transform:translateY(-4px) rotate(-1.5deg)}
+  .mbs{position:absolute;left:50%;top:54%;width:32px;height:32px;margin:-16px 0 0 -16px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f4a9c0,#c9577f 70%);color:#fff0f4;display:grid;place-items:center;font:700 13px 'Be Vietnam Pro',sans-serif;box-shadow:0 3px 8px rgba(120,30,60,.45);z-index:2}
+  .mbw.done .mbx{opacity:.55}
+  .mbt{font:600 11.5px/1.3 'Be Vietnam Pro',sans-serif;text-align:center;color:#f7dce5;min-height:30px}
+  .mbfin{display:none;width:min(92vw,440px);padding:14px 18px;text-align:center;margin-top:6px}
+  .mbfin .a{font:700 clamp(24px,6.4vw,30px)/1.3 'Dancing Script',cursive;color:#f7c9d8;margin-bottom:6px}
+  .mbfin .b{font:italic 600 clamp(15.5px,4.2vw,18px)/1.5 'Cormorant Garamond',serif;color:#fbeaf0}
+  .mblb{position:fixed;inset:0;z-index:50;cursor:pointer}
+  .mbbg{position:absolute;inset:0;background:rgba(30,14,24,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .mbstage{position:absolute;inset:0;display:grid;place-items:center}
+  .mbenv,.mbcard{grid-area:1/1}
+  .mbcard{width:min(90vw,440px);max-height:74dvh;overflow:auto;padding:clamp(22px,5vw,32px) clamp(20px,5vw,30px);background:linear-gradient(#fffdf9,#fbf1e6);border:1px solid #ead9c8;border-radius:8px;box-shadow:0 30px 70px rgba(0,0,0,.45);text-align:center;color:#6a4a44}
+  .mbcard .mbn{display:inline-block;font:600 11px 'Be Vietnam Pro',sans-serif;letter-spacing:.3em;color:#b0627f;margin-bottom:6px}
+  .mbcard h3{font:700 clamp(24px,6.4vw,30px)/1.3 'Dancing Script',cursive;color:#a45a74;margin-bottom:10px}
+  .mbcard p{font-size:clamp(14.5px,3.9vw,16.5px);line-height:1.85}
+  .mbcard em{display:block;margin-top:14px;font:italic 500 14px 'Cormorant Garamond',serif;opacity:.6}
+  `;document.head.appendChild(st)}
+
+  const MB=[
+   {t:'Một lời cảm ơn',b:'Cảm ơn cô vì đã luôn kiên nhẫn với tụi em, dù đôi lúc lớp mình hơi ồn ào và nghịch ngợm. Cảm ơn cô vì không chỉ dạy chúng em kiến thức, mà còn dạy chúng em cách trưởng thành hơn mỗi ngày.'},
+   {t:'Điều tụi em trân trọng',b:'Tụi em trân trọng những lần cô nhắc nhở, những lúc cô quan tâm và cả những điều nhỏ bé cô vẫn âm thầm làm cho lớp. Có thể đôi khi tụi em chưa nhận ra, nhưng tất cả đều rất đáng quý.'},
+   {t:'Chuyện lớp mình',b:'Chắc cô cũng biết, 8C5 đôi khi hơi “khó quản” một chút. Có lúc cả lớp làm cô phải nhắc đi nhắc lại, nhưng chính những khoảnh khắc ấy lại tạo nên những kỷ niệm rất riêng của cô trò mình.'},
+   {t:'Một lời xin lỗi',b:'Tụi em xin lỗi vì những lần chưa ngoan, những lúc chưa tập trung hay vô tình khiến cô buồn. Mong cô vẫn luôn bao dung và cho chúng em cơ hội để sửa đổi, tiến bộ hơn.'},
+   {t:'Lời hứa của 8C5',b:'Chúng em sẽ cố gắng học tập tốt hơn, có trách nhiệm hơn và biết quan tâm đến mọi người xung quanh. Tụi em không hứa sẽ luôn hoàn hảo, nhưng sẽ cố gắng để cô thấy rằng những điều cô dạy không hề uổng phí.'},
+   {t:'Gửi cô ngày 20/11',b:'Nhân ngày Nhà giáo Việt Nam 20/11, tập thể 8C5 kính chúc cô luôn mạnh khỏe, vui vẻ và giữ mãi nhiệt huyết với nghề. Mong rằng mỗi ngày đến lớp của cô đều có thật nhiều niềm vui. Chúng em thương và biết ơn cô rất nhiều!'}
+  ];
+
+  el.innerHTML=`<h2 class="ttl" style="color:#fbeaf0;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Hộp thư gửi cô</h2>
+  <p class="sby" style="margin-bottom:10px">Những điều 8C5 muốn nhắn gửi...</p>
+  <div class="mbg" id="mbg"></div>
+  <p class="hint" id="h5">Có những lời chúng em chưa nói thành câu. Cô hãy thử mở từng phong thư nhé!</p>
+  <div class="mbfin glass" id="mbfin"><div class="a">Gửi cô, từ 8C5 ♡</div><div class="b">Cảm ơn cô vì đã luôn đồng hành cùng chúng em!<br>Một món quà nhỏ, gói ghém thật nhiều tình cảm. Chúc cô có một ngày 20/11 thật ý nghĩa!</div></div>`;
+
+  const grid=$('#mbg'),viewed=new Set();let lock=false,finished=false;
+  MB.forEach((d,i)=>{const w=document.createElement('div');w.className='mbw';
+    w.innerHTML=`<div class="mbx"><div class="mbs">0${i+1}</div></div><div class="mbt">${d.t}</div>`;
+    grid.appendChild(w);
+    gsap.from(w,{y:40,autoAlpha:0,duration:.9,delay:.3+i*.12,ease:'back.out(1.5)'});
+    gsap.to($('.mbx',w),{y:-4,duration:rnd(1.8,2.6),yoyo:true,repeat:-1,ease:'sine.inOut',delay:rnd(0,1)});
+    w.onclick=()=>openLetter(i,w)});
+
+  function openLetter(i,cell){
+    if(lock||finished)return;lock=true;viewed.add(i);const d=MB[i];
+    const q=ctr($('.mbx',cell));fx.burst(q.x,q.y,16,{speed:200,spark:.8});
+    cell.classList.add('done');$('.mbs',cell).textContent='✓';
+    const lb=document.createElement('div');lb.className='mblb';
+    lb.innerHTML=`<div class="mbbg"></div><div class="mbstage"><div class="mbenv">${ENV}</div><div class="mbcard"><span class="mbn">THƯ 0${i+1}</span><h3>${d.t}</h3><p>${d.b}</p><em>Chạm để đóng</em></div></div>`;
+    document.body.appendChild(lb);
+    const env=$('.mbenv',lb),card=$('.mbcard',lb),flap=$('.e-flap',lb),paper=$('.e-paper',lb),seal=$('.e-seal',lb),rib=$('.e-rib',lb);
+    gsap.set(card,{autoAlpha:0});gsap.set(env,{scale:0,autoAlpha:0});gsap.set(flap,{transformPerspective:700});
+    gsap.timeline({onComplete:()=>{lb.onclick=close}})
+      .fromTo($('.mbbg',lb),{opacity:0},{opacity:1,duration:.4},0)
+      .to(env,{scale:1.1,autoAlpha:1,duration:.6,ease:'back.out(1.6)'},0)
+      .to(seal,{scale:1.7,autoAlpha:0,duration:.4},.7).to(rib,{autoAlpha:0,duration:.3},.7)
+      .to(flap,{rotationX:180,duration:.7,ease:'power2.inOut'},.8).set(flap,{zIndex:0},1.15)
+      .to(paper,{y:-90,duration:.7,ease:'power3.out'},1.5)
+      .to(env,{y:150,autoAlpha:0,duration:.7,ease:'power2.in'},2.1)
+      .fromTo(card,{autoAlpha:0,y:70,scale:.55},{autoAlpha:1,y:0,scale:1,duration:1,ease:'power3.out'},2)
+      .add(()=>{const c=ctr(card);fx.burst(c.x,c.y,24,{speed:260,spark:.8})},2.2);
+    function close(){lb.onclick=null;
+      gsap.to(lb,{autoAlpha:0,duration:.4,onComplete:()=>{lb.remove();lock=false;check()}})}
+  }
+
+  function check(){
+    if(viewed.size<MB.length||finished)return;finished=true;
+    const hint=$('#h5'),fin=$('#mbfin');
+    gsap.to(hint,{autoAlpha:0,duration:.4,onComplete:()=>{
+      hint.style.display='none';fin.style.display='block';
+      gsap.fromTo(fin,{autoAlpha:0,y:20,scale:.92},{autoAlpha:1,y:0,scale:1,duration:1,ease:'power3.out'});
+      const c=ctr(fin);fx.burst(c.x,c.y,50,{speed:380,spark:.6});
+      gsap.delayedCall(1,()=>unlock())}});
+  }
 }},
 
 /* ---- 6. NHỮNG LỜI QUEN THUỘC CỦA CÔ ---- */
