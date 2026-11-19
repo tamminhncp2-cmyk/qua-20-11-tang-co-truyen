@@ -8,7 +8,19 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Dancing+Script:wght@500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500;1,700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<style>
+<style> 
+  .hehe-emoji{
+  display:inline-block;
+  font-size:35px;
+  vertical-align:middle;
+  margin-left:6px;
+  animation:hehe 1s ease-in-out infinite;
+}
+
+@keyframes hehe{
+  0%,100%{transform:rotate(-10deg) scale(1)}
+  50%{transform:rotate(10deg) scale(1.2)}
+}
 :root{--pink:#F7DCE5;--rose:#E9AFC2;--pearl:#FFF8F0;--lav:#C8B5D1;--mocha:#A98276;--gold:#D9B77E;--ink:#5b3f3a}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;background:#1b1018;font-family:'Be Vietnam Pro',sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;overscroll-behavior:none}
@@ -191,8 +203,8 @@ const SAYINGS=[
   {say:'Thứ gì dẹ bây?!',mean:'Dịch ra: “Cô đang lo cho tụi em đó, nghe chưa?”'},
   {say:'Im coi bây!',mean:'Dịch ra: “Để cô nói điều quan trọng này, lắng nghe cô nhé.”'},
   {say:'Cô hứa là sẽ mời phụ huynh mà chưa mời',mean:'Dịch ra: “cô vẫn chưa mời vì cô đang cho cả lớp thêm cơ hội để sửa đổi.”'},
-  {say:'Những bạn vi phạm về viết bản kiểm điểm, có chữ kí phụ huynh rồi nộp cho cô',mean:'Dịch ra: “Cô muốn các em tự nhìn nhận lỗi sai, giải thích sự việc và cam kết sửa đổi.”'},
-  {say:'Lớp này toàn đại gia không bây!',mean:'Dịch ra: “Trêu lớp”'}
+  {say:'Ai hú đó?',mean:'Dịch ra: “Muốn các bạn ổn định và không quá khích”'},
+  {say:'Lớp này toàn con đại gia không bây!',mean:'Dịch ra: “Trêu lớp”'}
 ];
 /* ================================================ */
 
@@ -548,7 +560,13 @@ const LAY=[
       .add(()=>{const q=ctr($('#bub'));fx.burst(q.x,q.y,24,{speed:320,spark:.6})},.1)
       .fromTo('#mean',{autoAlpha:0,y:8},{autoAlpha:1,y:0,duration:.7},.8);
     $('#h6').textContent=n<len?`Chạm tiếp nữa nè · ${n}/${len}`:'';
-    if(n===len)tl.add(()=>{chip(shown);shown=null;$('#end6').textContent='Nghe quen ghê hen… Dù cô có “dẹ bây” bao nhiêu lần, tụi em vẫn biết đó là yêu thương.';gsap.to('#end6',{opacity:1,duration:1});unlock()},2.4)};
+    if(n===len)tl.add(()=>{
+  chip(shown);
+  shown=null;
+  $('#end6').innerHTML='Nghe quen ghê hen… Dù cô có “dẹ bây” bao nhiêu lần, tụi em vẫn biết đó là yêu thương. <span class="hehe-emoji">😁</span>';
+  gsap.to('#end6',{opacity:1,duration:1});
+  unlock();
+},2.4)};
   $('#tch').onclick=hit;$('#bub').onclick=hit;
 }},
 
