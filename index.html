@@ -195,7 +195,6 @@ const fitS=(s,fw=.42,fh=.3)=>Math.min(s,innerWidth*fw/150,innerHeight*fh/150);
 const bgm=$('#bgm');bgm.volume=.7;
 const sync=()=>document.body.classList.toggle('playing',!bgm.paused);
 bgm.addEventListener('play',sync);bgm.addEventListener('pause',sync);
-bgm.addEventListener('error',()=>console.warn('Chưa tìm thấy music.mp3 — hãy thêm file nhạc vào repo.'));
 function playMusic(){const p=bgm.play();if(p&&p.catch)p.catch(()=>{})}
 $('#mus').onclick=()=>bgm.paused?playMusic():bgm.pause();
 
