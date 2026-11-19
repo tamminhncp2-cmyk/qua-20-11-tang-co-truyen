@@ -89,7 +89,7 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 .pols{position:absolute;inset:0;transform-style:preserve-3d}
 .pol{
   position:absolute;
-  width:clamp(100px,16vw,155px);
+  width:clamp(90px,13vw,135px);
   aspect-ratio:4/4.9;
   cursor:pointer;
   transform-style:preserve-3d
@@ -408,14 +408,14 @@ const SC=[
   el.innerHTML=`<div class="kicker">Kỷ niệm trôi trong thời gian</div><div class="album" id="alb"><div class="pols" id="pols"></div><div class="alblabel" id="albl">Album 8C5 · 2026 ♡</div></div>
   <p class="hint" id="h3">Chạm vào từng tấm ảnh · đã xem <b id="c3">0</b>/${PHOTOS.length}</p>`;
 const LAY=[
-{x:13,y:23,r:-5},
-{x:38,y:20,r:4},
-{x:65,y:22,r:-4},
-{x:88,y:25,r:5},
-{x:15,y:70,r:4},
-{x:40,y:72,r:-5},
-{x:65,y:70,r:5},
-{x:88,y:70,r:-4}
+{x:9,y:20,r:-5},
+{x:36,y:18,r:4},
+{x:64,y:20,r:-4},
+{x:91,y:18,r:5},
+{x:9,y:73,r:4},
+{x:36,y:75,r:-5},
+{x:64,y:73,r:5},
+{x:91,y:75,r:-4}
 ];
   const inner=(ph,big)=>`<div class="ph"><span>🌸</span><img src="${ph.src}" alt="" onerror="this.remove()"></div><div class="cap">${big?ph.cap:ph.tag}</div>`;
   const pols=$('#pols'),viewed=new Set();let lb=null,finished=false;
