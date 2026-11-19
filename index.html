@@ -136,9 +136,29 @@ input[type=range]{flex:1;width:100%;accent-color:#e9afc2;height:4px;cursor:point
 .vol{display:flex;align-items:center;gap:8px;flex:1;max-width:150px}
 
 /* trang 6 */
-.st6{display:flex;flex-direction:column;align-items:center;gap:8px;width:min(94vw,470px);min-height:min(40dvh,330px)}
+.st6{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  width:min(96vw,560px);
+  min-height:min(40dvh,330px)
+}
 .tch{width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#f7dce5);display:grid;place-items:center;font-size:46px;box-shadow:0 12px 30px rgba(190,100,140,.35),0 0 0 6px rgba(255,255,255,.6);cursor:pointer;animation:pulse 2.4s infinite}
-.bub{position:relative;visibility:hidden;opacity:0;background:#fff;border:3px solid #e9afc2;border-radius:26px;padding:16px 22px;margin-top:12px;box-shadow:6px 6px 0 #f3c3d3;max-width:96%}
+.bub{
+  position:relative;
+  visibility:hidden;
+  opacity:0;
+  background:#fff;
+  border:3px solid #e9afc2;
+  border-radius:26px;
+  padding:18px 26px;
+  margin-top:12px;
+  box-shadow:6px 6px 0 #f3c3d3;
+  width:100%;
+  max-width:100%;
+  box-sizing:border-box;
+}
 .bub::before{content:'';position:absolute;top:-14px;left:50%;margin-left:-12px;border:12px solid transparent;border-top:0;border-bottom:14px solid #e9afc2}
 .say{font:800 clamp(26px,8.4vw,46px)/1.1 'Be Vietnam Pro',sans-serif;text-transform:uppercase;text-align:center;color:#c04a6e;text-shadow:2px 2px 0 #fff,4px 4px 0 #f7dce5}
 .mean{font:italic 600 clamp(16px,4.4vw,20px)/1.4 'Cormorant Garamond',serif;text-align:center;color:#7a4358;opacity:0;padding:0 8px}
